@@ -71,6 +71,15 @@ Here admin can login on admin site and can add a kid and an image.
 
   * For generating a Django ***SECRET_KEY***, many different sites are there. This [site](https://miniwebtool.com/django-secret-key-generator/) can be used for quick reference.
 
+* For SMTP Server to work, make a gmail id and put the following in the `.env` file
+
+  ```bash
+    SMTP_EMAIL = <GMAIL created above>
+    SMTP_PASSWORD = <Password>
+  ```
+
+  **Make sure to turn on *Less secure app access* in the settings.** 
+
 ### Before proceeding further, make sure ```Directory``` looks like
 
 ```
