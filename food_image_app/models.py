@@ -1,5 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+
+import smtplib, ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Create your models here.
 class Kid(models.Model):
@@ -27,3 +34,41 @@ class Image(models.Model):
     is_approved = models.BooleanField(default=False)
     approved_by = models.CharField(max_length=100)
     food_group = models.CharField(max_length=100, choices=FoodGroup.choices)
+
+@receiver(post_save, sender=Image)
+def send_email_to_parent(sender, instance, *args, **kwargs):
+    # Sender's Gmail Credentials
+    email = settings.SMTP_EMAIL 
+    password = settings.SMTP_PASSWORD
+    image = instance
+    kid = instance.kid
+    if(image.food_group!="Unknown"):
+        # Food Item
+        return
+
+    try:
+        context = ssl.create_default_context()
+
+        text = f'''This email is being sent to notify you that your kid, {kid.kid_name} is provided a non-food item to eat. This item is approved by {image.approved_by}.
+        
+        Please take the necessary action.
+        '''
+        subject = f"Non-Food Item Provided to {kid.kid_name}"
+        from_email = email
+        to_email = [instance.kid.parent_email_address]
+
+        msg = MIMEMultipart('alternative')
+        msg['From'] = from_email
+        msg['To'] = ", ".join(to_email)
+        msg['Subject'] = subject
+        txt_part = MIMEText(text,'plain')
+        msg.attach(txt_part)
+
+        msg_str = msg.as_string()
+        server = smtplib.SMTP_SSL(host='smtp.gmail.com', port=465, context=context)
+        server.ehlo()
+        server.login(email, password)
+        server.sendmail(from_email, to_email, msg_str)
+        server.quit()
+    except Exception as e:
+        pass
