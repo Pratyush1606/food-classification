@@ -65,6 +65,8 @@ def send_email_to_parent(sender, instance, *args, **kwargs):
         msg.attach(txt_part)
 
         msg_str = msg.as_string()
+        
+        # Creating a gmail SMTP Server
         server = smtplib.SMTP_SSL(host='smtp.gmail.com', port=465, context=context)
         server.ehlo()
         server.login(email, password)
