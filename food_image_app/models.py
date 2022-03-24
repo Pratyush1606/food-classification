@@ -20,7 +20,7 @@ class FoodGroup(models.TextChoices):
 
 class Image(models.Model):
     image_id = models.AutoField(primary_key=True, editable=False)
-    image_url = models.URLField()
+    image_url = models.URLField(max_length=500)
     kid = models.ForeignKey(to=Kid, on_delete=models.CASCADE, related_name="kid_food_images")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
