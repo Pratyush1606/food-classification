@@ -1,0 +1,1 @@
+web: gunicorn food_classfication.wsgi --log-file - 
