@@ -9,4 +9,4 @@ class KidSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['image_id', 'kid', 'created_on', 'updated_on', 'is_approved', 'approved_by', 'food_group']
+        fields = ['image_id', 'kid', 'image_url', 'created_on', 'updated_on', 'is_approved', 'approved_by', 'food_group']
